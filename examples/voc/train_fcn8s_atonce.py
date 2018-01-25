@@ -10,7 +10,7 @@ import torchfcn
 
 from train_fcn32s import get_log_dir
 from train_fcn32s import get_parameters
-
+from voc import SBDClassSeg,VOC2011ClassSeg
 
 configurations = {
     # same configuration as original work
@@ -53,10 +53,10 @@ def main():
     root = osp.expanduser('~/data/datasets')
     kwargs = {'num_workers': 4, 'pin_memory': True} if cuda else {}
     train_loader = torch.utils.data.DataLoader(
-        torchfcn.datasets.SBDClassSeg(root, split='train', transform=True),
+        SBDClassSeg(root, split='train', transform=True),
         batch_size=1, shuffle=True, **kwargs)
     val_loader = torch.utils.data.DataLoader(
-        torchfcn.datasets.VOC2011ClassSeg(
+        VOC2011ClassSeg(
             root, split='seg11valid', transform=True),
         batch_size=1, shuffle=False, **kwargs)
 
