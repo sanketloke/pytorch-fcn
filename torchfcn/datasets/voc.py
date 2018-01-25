@@ -8,7 +8,7 @@ import PIL.Image
 import scipy.io
 import torch
 from torch.utils import data
-
+from pdb import set_trace as st
 
 class VOCClassSegBase(data.Dataset):
 
@@ -144,6 +144,7 @@ class SBDClassSeg(VOCClassSegBase):
                     'img': img_file,
                     'lbl': lbl_file,
                 })
+        st()
 
     def __getitem__(self, index):
         data_file = self.files[self.split][index]
