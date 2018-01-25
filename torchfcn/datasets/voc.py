@@ -143,7 +143,6 @@ class SBDClassSeg(VOCClassSegBase):
                     'img': img_file,
                     'lbl': lbl_file,
                 })
-        st()
 
     def __getitem__(self, index):
         data_file = self.files[self.split][index]
