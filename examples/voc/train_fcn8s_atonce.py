@@ -7,7 +7,8 @@ import os.path as osp
 import torch
 
 import torchfcn
-
+import networks
+import misc
 from train_fcn32s import get_log_dir
 from train_fcn32s import get_parameters
 from voc import SBDClassSeg,VOC2011ClassSeg
@@ -213,7 +214,53 @@ class Trainer(object):
             if self.iteration >= self.max_iter:
                 break
 
+from data.segmentation import SegmentationDataset,SegmentationDataset_Multi,CityScapesDataset,CityScapesDataset_Multi
+from data import pascal,pascalcontext,ade20k,segmentation,pascal_sequential
+import os
+import numpy as np
+from data.custom_transforms import Scale , EliminationTransform, ClampTransform
+import torchvision.transforms as transforms
+import PIL
+import torch
+from pdb import set_trace as st
+from sets import Set
+from data.pascal import get_split
+from networks import DilatedModel,FCN8s
+import torch.nn as nn
+import time
+import options
+from utils.visualizer import Visualizer
+from misc import Task,log_results,TaskCache,store_responses
+from data.transforms.cityscapeslabel import get_labels_and_map
+from core import train,multi_train,test,lwf_train,uncertainty_train,ewf_train
+from util import unique,load_pretrained
+import networks
+import evaluation
+opt = options.BaseOptions().parse()
+visualizer = Visualizer(opt)
 
+
+
+tasks=[]
+transform = transforms.Compose([
+                                      Scale( (opt.loadSize,opt.loadSize) ),
+                                       transforms.ToTensor()
+                                    ])
+target_transform = transforms.Compose([
+    Scale((opt.loadSize,opt.loadSize),interpolation=PIL.Image.NEAREST),
+    transforms.ToTensor()
+    #,EliminationTransform()
+    #                                   ,ClampTransform(20)
+                                    ])
+t1 = Task('pascalvocA',opt.data_dir+'/pascalvoc',21,'segment',opt,'pascalvoc12',transform=transform,target_transform=target_transform,custom_type='A')
+t2 = Task('pascalvocB',opt.data_dir+'/pascalvoc',21,'segment',opt,'pascalvoc12',transform=transform,target_transform=target_transform,custom_type='B')
+
+tasks.append(t1)
+tasks.append(t2)
+model=  networks.__dict__[opt.model](t.name,t.type,t.num_classes,encoder=opt.encoder,decoder=opt.decoder,setting=opt.model_setting)
+for t in tasks:
+    model.modify_model(t.name,t.type,t.num_classes)
+start_index=0
 
 def main():
     parser = argparse.ArgumentParser()
@@ -248,6 +295,7 @@ def main():
         batch_size=1, shuffle=False, **kwargs)
 
     # 2. model
+
 
     model = torchfcn.models.FCN8sAtOnce(n_class=21)
     start_epoch = 0
