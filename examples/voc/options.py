@@ -19,7 +19,7 @@ class BaseOptions():
             '--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2')
         self.parser.add_argument('--name', type=str, default='testBeta1',
                                  help='name of the experiment. It decides where to store samples and models')
-        self.parser.add_argument('--model', type=str, default='DilatedModel',
+        self.parser.add_argument('--model', type=str, default='FCN8s',
                                  help='chooses which model to use.')
         self.parser.add_argument(
             '--nThreads', default=20, type=int, help='# threads for loading data')
