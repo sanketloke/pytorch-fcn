@@ -13,6 +13,7 @@ from train_fcn32s import get_log_dir
 from train_fcn32s import get_parameters
 from voc import SBDClassSeg,VOC2011ClassSeg
 
+
 configurations = {
     # same configuration as original work
     # https://github.com/shelhamer/fcn.berkeleyvision.org
