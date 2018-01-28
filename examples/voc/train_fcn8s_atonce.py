@@ -226,7 +226,7 @@ import torch
 from pdb import set_trace as st
 from sets import Set
 from data.pascal import get_split
-from networks import DilatedModel,FCN8s
+from networks import FCN8s
 import torch.nn as nn
 import time
 import options
@@ -258,6 +258,7 @@ t2 = Task('pascalvocB',opt.data_dir+'/pascalvoc',21,'segment',opt,'pascalvoc12',
 
 tasks.append(t1)
 tasks.append(t2)
+t = t1
 model=  networks.__dict__[opt.model](t.name,t.type,t.num_classes,encoder=opt.encoder,decoder=opt.decoder,setting=opt.model_setting)
 for t in tasks:
     model.modify_model(t.name,t.type,t.num_classes)
@@ -265,13 +266,13 @@ start_index=0
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-g', '--gpu', type=int, required=True)
+    parser.add_argument('-g', '--gpu', type=int)
     parser.add_argument('-c', '--config', type=int, default=1,
                         choices=configurations.keys())
     parser.add_argument('--resume', help='Checkpoint path')
     args = parser.parse_args()
 
-    gpu = args.gpu
+    gpu = 0
     cfg = configurations[args.config]
     out = get_log_dir('fcn8s-atonce', args.config, cfg)
     resume = args.resume

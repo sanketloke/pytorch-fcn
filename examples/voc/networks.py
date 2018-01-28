@@ -11,6 +11,7 @@ import torch.nn as nn
 import torchvision
 from pdb import set_trace as st
 import os.path as osp
+import torchfcn
 
 
 # https://github.com/shelhamer/fcn.berkeleyvision.org/blob/master/surgery.py
@@ -43,8 +44,8 @@ class FCN8sBase(nn.Module):
             md5='dbd9bbb3829a3184913bccc74373afbb',
         )
 
-    def __init__(self,vgg16):
-        super(FCN8s, self).__init__()
+    def __init__(self):
+        super(FCN8sBase, self).__init__()
         # conv1
         self.conv1_1 = nn.Conv2d(3, 64, 3, padding=100)
         self.relu1_1 = nn.ReLU(inplace=True)
@@ -139,7 +140,7 @@ class FCN8sBase(nn.Module):
                 initial_weight = get_upsampling_weight(
                     m.in_channels, m.out_channels, m.kernel_size[0])
                 m.weight.data.copy_(initial_weight)
-    
+
     def copy_params_from_vgg16(self, vgg16):
         features = [
             self.conv1_1, self.relu1_1,
@@ -181,7 +182,7 @@ class FCN8s(FCN8sBase):
 
 
     def __init__(self, task_name,task_type ,task_classes, gpu_ids=[0], setting='normal',encoder='resnet50_dilated8',decoder='c5bilinear'):
-        super(FCN8sBase,self).__init_()
+        super(FCN8s, self).__init__()
         self.modify_model(task_name, task_type, task_classes)
         self.set_setting(setting)
 
@@ -288,11 +289,11 @@ class FCN8s(FCN8sBase):
 
         for t in tasks_custom:
             dic = self.task_parameters[t.name]
-            score_fr = dic['score_fr'] 
+            score_fr = dic['score_fr']
             score_pool3 = dic['score_pool3']
             score_pool4 = dic['score_pool4']
-            upscore2 = dic['upscore2'] 
-            upscore8 = dic['upscore8'] 
+            upscore2 = dic['upscore2']
+            upscore8 = dic['upscore8']
             upscore_pool4 = dic['upscore_pool4']
 
 
@@ -325,7 +326,7 @@ class FCN8s(FCN8sBase):
     def set_setting(self, setting):
         if setting == 'feature_extraction':
             print "Feature Extractor "
-            k = self.feat1 + self.feat2 + self.feat3 +  self.feat4 +  self.feat5 + self.fconn 
+            k = self.feat1 + self.feat2 + self.feat3 +  self.feat4 +  self.feat5 + self.fconn
             for i in k:
                 for j in i.parameters():
                     j.requires_grad = False
@@ -341,14 +342,14 @@ class FCN8s(FCN8sBase):
                 decoder = copy.deepcopy(self.task_parameters[previous_load])
                 self.task_parameters[task_name] = decoder
             else:
-                decoder = build_decoder(task_classes)
+                decoder = self.build_decoder(task_classes)
                 self.task_parameters[task_name] = decoder
         elif task_type == 'depth':
             if previous_load and previous_load in self.tasks.keys():
                 decoder = copy.deepcopy(self.task_parameters[previous_load])
                 self.task_parameters[task_name] = decoder
             else:
-                decoder = build_decoder(1)
+                decoder = self.build_decoder(1)
                 self.task_parameters[task_name] = decoder
 
     def _initialize_weights(self):
@@ -363,7 +364,7 @@ class FCN8s(FCN8sBase):
                     m.in_channels, m.out_channels, m.kernel_size[0])
                 m.weight.data.copy_(initial_weight)
 
-    def build_decoder(self, task_classes):
+    def build_decoder(self, n_class):
         dic = {}
         dic['score_fr'] = nn.Conv2d(4096, n_class, 1)
         dic['score_pool3'] = nn.Conv2d(256, n_class, 1)
@@ -371,7 +372,7 @@ class FCN8s(FCN8sBase):
         dic['upscore2'] = nn.ConvTranspose2d(n_class, n_class, 4, stride=2, bias=False)
         dic['upscore8'] = nn.ConvTranspose2d(n_class, n_class, 16, stride=8, bias=False)
         dic['upscore_pool4'] = nn.ConvTranspose2d(n_class, n_class, 4, stride=2, bias=False)
-        for k,m in dic:
+        for k,m in dic.iteritems():
             if isinstance(m, nn.ConvTranspose2d):
                 assert m.kernel_size[0] == m.kernel_size[1]
                 initial_weight = get_upsampling_weight(
@@ -384,7 +385,7 @@ class FCN8s(FCN8sBase):
         return dic
 
     def assign_decoder(self,dic,flag=True):
-        for k,v in dic:
+        for k,v in dic.iteritems():
             if flag:
                 setattr(self,k,dic[k])
             else:
