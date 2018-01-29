@@ -220,7 +220,6 @@ class Trainer(object):
 
             if self.cuda:
                 data, target = data.cuda(), target.cuda()
-                
             data, target = Variable(data), Variable(target)
             self.optim.zero_grad()
             score = self.model(data)
