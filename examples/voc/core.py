@@ -102,7 +102,7 @@ def train(task, model, data_loader, num_epochs, opt, in_parallel=False, visualiz
     # Counter Variable
     updates = 0
 
-
+    model.train()
     for epoch in range(num_epochs):
         iterations = 0
         for i, (images, labels) in tqdm(enumerate(data_loader)):
