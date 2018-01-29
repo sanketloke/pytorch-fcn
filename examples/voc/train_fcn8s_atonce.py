@@ -309,7 +309,7 @@ tasks.append(t2)
 t = t1
 model2 =  networks.__dict__[opt.model](t.name,t.type,t.num_classes,encoder=opt.encoder,decoder=opt.decoder,setting=opt.model_setting)
 for t in tasks:
-    model.modify_model(t.name,t.type,t.num_classes)
+    model2.modify_model(t.name,t.type,t.num_classes)
 start_index=0
 
 def main():
