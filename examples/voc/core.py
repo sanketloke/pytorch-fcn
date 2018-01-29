@@ -132,7 +132,7 @@ def train(task, model, data_loader, num_epochs, opt, in_parallel=False, visualiz
                 scores = F.softmax(scores)
                 loss = criterion(scores, target)
             else:
-                loss = criterion(scores, target.long())
+                loss = criterion(scores, target)
             loss.backward()
 
             optimizer.step()
