@@ -63,6 +63,7 @@ def get_parameters(model, bias=False):
         torchfcn.models.FCN32s,
         torchfcn.models.FCN16s,
         torchfcn.models.FCN8s,
+        FCN8s
     )
     for m in model.modules():
         if isinstance(m, nn.Conv2d):
