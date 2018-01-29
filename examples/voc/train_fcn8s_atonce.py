@@ -265,16 +265,16 @@ for t in tasks:
 start_index=0
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-g', '--gpu', type=int)
-    parser.add_argument('-c', '--config', type=int, default=1,
-                        choices=configurations.keys())
-    parser.add_argument('--resume', help='Checkpoint path')
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('-g', '--gpu', type=int)
+    # parser.add_argument('-c', '--config', type=int, default=1,
+    #                     choices=configurations.keys())
+    # parser.add_argument('--resume', help='Checkpoint path')
+    # args = parser.parse_args()
 
     gpu = 0
-    cfg = configurations[args.config]
-    out = get_log_dir('fcn8s-atonce', args.config, cfg)
+    cfg = configurations[1]
+    out = get_log_dir('fcn8s-atonce', 1, cfg)
     resume = args.resume
 
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu)
