@@ -307,7 +307,7 @@ t2 = Task('pascalvocB',opt.data_dir+'/pascalvoc',21,'segment',opt,'pascalvoc12',
 tasks.append(t1)
 tasks.append(t2)
 t = t1
-model=  networks.__dict__[opt.model](t.name,t.type,t.num_classes,encoder=opt.encoder,decoder=opt.decoder,setting=opt.model_setting)
+model2 =  networks.__dict__[opt.model](t.name,t.type,t.num_classes,encoder=opt.encoder,decoder=opt.decoder,setting=opt.model_setting)
 for t in tasks:
     model.modify_model(t.name,t.type,t.num_classes)
 start_index=0
@@ -347,7 +347,9 @@ def main():
     # 2. model
 
 
-    model = torchfcn.models.FCN8sAtOnce(n_class=21)
+    model3 = torchfcn.models.FCN8sAtOnce(n_class=21)
+    model = model2
+    model2.set_mode(t)
     start_epoch = 0
     start_iteration = 0
     if resume:
