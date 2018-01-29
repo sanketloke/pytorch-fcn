@@ -264,7 +264,7 @@ class Trainer(object):
                 break
 
 from data.segmentation import SegmentationDataset,SegmentationDataset_Multi,CityScapesDataset,CityScapesDataset_Multi
-from data import pascal,pascalcontext,ade20k,segmentation,pascal_sequential
+from data import pascal,pascalcontext,ade20k,segmentation
 import os
 import numpy as np
 from data.custom_transforms import Scale , EliminationTransform, ClampTransform

@@ -4,7 +4,7 @@ from data.segmentation import SegmentationDataset, SegmentationDataset_Multi, Ci
 from pdb import set_trace as st
 import pandas as pd
 import numpy as np
-from data import pascal, pascalcontext, ade20k, segmentation, kitti_depth, pascal_edges
+from data import pascal, pascalcontext, ade20k, segmentation, kitti_depth
 import numbers
 import types
 import collections
