@@ -74,7 +74,6 @@ def cross_entropy2d(input, target, weight=None, size_average=True):
         loss /= mask.data.sum()
     return loss
 
-
 here = osp.dirname(osp.abspath(__file__))
 
 class Trainer(object):
@@ -150,7 +149,7 @@ class Trainer(object):
             if np.isnan(float(loss.data[0])):
                 raise ValueError('loss is nan while validating')
             val_loss += float(loss.data[0]) / len(data)
-            print loss
+            print loss.data[0]
             imgs = data.data.cpu()
             lbl_pred = score.data.max(1)[1].cpu().numpy()[:, :, :]
             lbl_true = target.data.cpu()
@@ -230,6 +229,7 @@ class Trainer(object):
             loss /= len(data)
             if np.isnan(float(loss.data[0])):
                 raise ValueError('loss is nan while training')
+            print loss.data[0]
             loss.backward()
             self.optim.step()
 
