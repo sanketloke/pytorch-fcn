@@ -364,7 +364,7 @@ def main():
         model = model.cuda()
 
     # 3. optimizer
-
+    st()
     optim = torch.optim.SGD(
         [
             {'params': get_parameters(model, bias=False)},
