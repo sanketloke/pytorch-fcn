@@ -77,8 +77,6 @@ def get_parameters(model, bias=False):
                 assert m.bias is None
         elif isinstance(m, modules_skipped):
             continue
-        else:
-            raise ValueError('Unexpected module: %s' % str(m))
 
 
 here = osp.dirname(osp.abspath(__file__))
