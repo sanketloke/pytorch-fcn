@@ -3,15 +3,36 @@
 import argparse
 import os
 import os.path as osp
-
+import math
+import pytz
 import torch
-
+import datetime
 import torchfcn
 import networks
 import misc
 from train_fcn32s import get_log_dir
 from train_fcn32s import get_parameters
 from voc import SBDClassSeg,VOC2011ClassSeg
+import tqdm
+
+
+import datetime
+from distutils.version import LooseVersion
+import math
+import os
+import os.path as osp
+import shutil
+
+import fcn
+import numpy as np
+import pytz
+import scipy.misc
+import torch
+from torch.autograd import Variable
+import torch.nn.functional as F
+import tqdm
+
+
 
 
 configurations = {
@@ -275,7 +296,7 @@ def main():
     gpu = 0
     cfg = configurations[1]
     out = get_log_dir('fcn8s-atonce', 1, cfg)
-    resume = args.resume
+    resume = None
 
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu)
     cuda = torch.cuda.is_available()
